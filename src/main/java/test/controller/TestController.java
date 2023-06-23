@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import test.dto.TestDto;
 
 @RestController
+
 public class TestController {
 
     @GetMapping("/test")
