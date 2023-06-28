@@ -1,4 +1,4 @@
-package test.entity;
+package kr.gradle.demo.test.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "test")
+@Table(name = "kr/gradle/demo/test")
 public class Test {
 
     @Id

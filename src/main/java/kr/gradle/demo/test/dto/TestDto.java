@@ -1,4 +1,4 @@
-package test.dto;
+package kr.gradle.demo.test.dto;
 
 import lombok.Getter;
 import lombok.Setter;
