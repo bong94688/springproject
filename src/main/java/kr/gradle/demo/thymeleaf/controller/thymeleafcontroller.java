@@ -1,10 +1,12 @@
 package kr.gradle.demo.thymeleaf.controller;
 
 import kr.gradle.demo.item.dto.ItemDto;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.awt.*;
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/thymeleaf")
+@Log4j2
 public class thymeleafcontroller {
 
 
@@ -60,4 +63,22 @@ public class thymeleafcontroller {
         model.addAttribute("list",list);
 
     }
+
+//    param1으로 맞추고 param2로 맞춰줘야한다!!!
+    @GetMapping("/ex5")
+    public String ex5(@RequestParam("param1") String p1, String param2, Model model){
+        log.info("------------------------->"+p1+"+"+param2);
+//        Point p = new Point(10,20);
+//        model.addAttribute("data", p);
+
+        model.addAttribute("param1",p1);
+        model.addAttribute("param2",param2);
+        return "thymeleaf/ex5";
+    }
+//    GetMapping에서 바이패스 할려면 void 를 넣는다. -> 화면만 띄우는 역할.
+    @GetMapping(value = {"/ex6","ex7"})
+    public void ex6(){
+
+    }
+
 }
