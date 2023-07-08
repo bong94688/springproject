@@ -76,7 +76,7 @@ public class SecurityConfig {
                   exception.authenticationEntryPoint(new AuthenticationEntryPoint() {
                       @Override
                       public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-                          response.sendError(,);
+                          response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Unauthorized");
                       }
                   }) ;
                 })
