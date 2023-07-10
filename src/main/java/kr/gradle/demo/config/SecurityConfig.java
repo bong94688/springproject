@@ -64,6 +64,7 @@ public class SecurityConfig {
                     author.requestMatchers("/images/**").permitAll();
                     author.requestMatchers("/fragments/**").permitAll();
                     author.requestMatchers("/layouts/**").permitAll();
+                    author.requestMatchers("error/**").permitAll();
 //                    author.requestMatchers("/item/**").permitAll();
                     author.requestMatchers("/").permitAll();
                     author.requestMatchers("/member/**","/item/**").permitAll();
