@@ -1,4 +1,4 @@
-package kr.gradle.demo.cart.entity;
+package kr.gradle.demo.order.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -11,32 +11,34 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QCartItem is a Querydsl query type for CartItem
+ * QOrderItem is a Querydsl query type for OrderItem
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QCartItem extends EntityPathBase<CartItem> {
+public class QOrderItem extends EntityPathBase<OrderItem> {
 
-    private static final long serialVersionUID = -1950358213L;
+    private static final long serialVersionUID = 952294113L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QCartItem cartItem = new QCartItem("cartItem");
+    public static final QOrderItem orderItem = new QOrderItem("orderItem");
 
     public final kr.gradle.demo.utils.entity.QBaseEntity _super = new kr.gradle.demo.utils.entity.QBaseEntity(this);
-
-    public final QCart cart;
 
     public final NumberPath<Integer> count = createNumber("count", Integer.class);
 
     //inherited
     public final StringPath createBy = _super.createBy;
 
-    public final NumberPath<Long> Id = createNumber("Id", Long.class);
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final kr.gradle.demo.item.entity.QItem item;
 
     //inherited
     public final StringPath modifiedBy = _super.modifiedBy;
+
+    public final QOrder order;
+
+    public final NumberPath<Integer> orderprice = createNumber("orderprice", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> regTime = _super.regTime;
@@ -44,26 +46,26 @@ public class QCartItem extends EntityPathBase<CartItem> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
 
-    public QCartItem(String variable) {
-        this(CartItem.class, forVariable(variable), INITS);
+    public QOrderItem(String variable) {
+        this(OrderItem.class, forVariable(variable), INITS);
     }
 
-    public QCartItem(Path<? extends CartItem> path) {
+    public QOrderItem(Path<? extends OrderItem> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QCartItem(PathMetadata metadata) {
+    public QOrderItem(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QCartItem(PathMetadata metadata, PathInits inits) {
-        this(CartItem.class, metadata, inits);
+    public QOrderItem(PathMetadata metadata, PathInits inits) {
+        this(OrderItem.class, metadata, inits);
     }
 
-    public QCartItem(Class<? extends CartItem> type, PathMetadata metadata, PathInits inits) {
+    public QOrderItem(Class<? extends OrderItem> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.cart = inits.isInitialized("cart") ? new QCart(forProperty("cart"), inits.get("cart")) : null;
         this.item = inits.isInitialized("item") ? new kr.gradle.demo.item.entity.QItem(forProperty("item")) : null;
+        this.order = inits.isInitialized("order") ? new QOrder(forProperty("order"), inits.get("order")) : null;
     }
 
 }

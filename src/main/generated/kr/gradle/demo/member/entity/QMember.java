@@ -19,17 +19,31 @@ public class QMember extends EntityPathBase<Member> {
 
     public static final QMember member = new QMember("member1");
 
+    public final kr.gradle.demo.utils.entity.QBaseEntity _super = new kr.gradle.demo.utils.entity.QBaseEntity(this);
+
     public final StringPath adress = createString("adress");
+
+    //inherited
+    public final StringPath createBy = _super.createBy;
 
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> Id = createNumber("Id", Long.class);
 
+    //inherited
+    public final StringPath modifiedBy = _super.modifiedBy;
+
     public final StringPath name = createString("name");
 
     public final StringPath passowrd = createString("passowrd");
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> regTime = _super.regTime;
+
     public final EnumPath<kr.gradle.demo.member.constant.Role> role = createEnum("role", kr.gradle.demo.member.constant.Role.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
 
     public QMember(String variable) {
         super(Member.class, forVariable(variable));

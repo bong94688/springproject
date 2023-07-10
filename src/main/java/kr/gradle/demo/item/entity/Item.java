@@ -2,6 +2,7 @@ package kr.gradle.demo.item.entity;
 
 import jakarta.persistence.*;
 import kr.gradle.demo.item.constant.ItemSellStatus;
+import kr.gradle.demo.utils.entity.BaseEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Item {
+public class Item extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +40,8 @@ public class Item {
     private String itemDetail; //상품 상세 설명
 
     // LocalDate(날짜), Time(시간)
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ItemSellStatus itemSellStatus;
 
 

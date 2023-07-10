@@ -62,6 +62,9 @@ public class SecurityConfig {
                     author.requestMatchers("/js/**").permitAll();
                     author.requestMatchers("/upload/**").permitAll();
                     author.requestMatchers("/images/**").permitAll();
+                    author.requestMatchers("/fragments/**").permitAll();
+                    author.requestMatchers("/layouts/**").permitAll();
+//                    author.requestMatchers("/item/**").permitAll();
                     author.requestMatchers("/").permitAll();
                     author.requestMatchers("/member/**","/item/**").permitAll();
                     author.requestMatchers("/board/**").hasAnyRole("ADMIN","User");

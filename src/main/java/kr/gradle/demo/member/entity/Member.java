@@ -4,6 +4,7 @@ package kr.gradle.demo.member.entity;
 import jakarta.persistence.*;
 import kr.gradle.demo.member.constant.Role;
 import kr.gradle.demo.member.dto.MemberFormDto;
+import kr.gradle.demo.utils.entity.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseEntity {
 
 
     @Id

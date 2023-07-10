@@ -2,6 +2,7 @@ package kr.gradle.demo.cart.entity;
 
 import jakarta.persistence.*;
 import kr.gradle.demo.item.entity.Item;
+import kr.gradle.demo.utils.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItem {
+public class CartItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
