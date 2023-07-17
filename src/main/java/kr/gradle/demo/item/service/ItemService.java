@@ -1,8 +1,10 @@
 package kr.gradle.demo.item.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import kr.gradle.demo.item.Repository.ItemImgRepository;
 import kr.gradle.demo.item.Repository.ItemRepository;
 import kr.gradle.demo.item.dto.ItemFormDto;
+import kr.gradle.demo.item.dto.ItemImgDto;
 import kr.gradle.demo.item.entity.Item;
 import kr.gradle.demo.item.entity.ItemImage;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,7 +63,27 @@ public class ItemService {
     public ItemFormDto getItemDetail(Long itemId){
 
 
-        return null;
+//       findBy ItemId (OrderBy Id 내림차순으로)
+        List<ItemImage> itemImages = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
+        List<ItemImgDto> itemImgDtos = new ArrayList<>();
+
+//       itemImages 에서 itemImage를 하나씩 꺼내서 of 로 Dto로 바꿔준다.
+        for(ItemImage  itemImage : itemImages){
+            ItemImgDto itemImgDto = ItemImgDto.of(itemImage);
+            itemImgDtos.add(itemImgDto);
+        }
+
+//       item찾기 Optional이기때문에 없으면 throw 던지는 로직 필요
+        Item item = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
+
+//       itemFormDto에 만들어놓은 of를 만들어놓는거로 바꾸는로직
+        ItemFormDto itemFormDto = ItemFormDto.of(item);
+
+//
+        itemFormDto.setItemImgDtoList(itemImgDtos);
+//        itemFormDto.setItemImgIds();
+
+        return itemFormDto;
     }
 
 }

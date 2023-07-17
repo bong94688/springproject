@@ -1,17 +1,16 @@
 package kr.gradle.demo.item.controller;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import kr.gradle.demo.item.dto.ItemFormDto;
 import kr.gradle.demo.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -69,6 +68,30 @@ public class ItemController {
     }
 
 //    날릴때 데이터의 무결성을 보장하는것이 중요하다. -> Join걸어서 엉뚱한 데이터 가 들어오는것을 막아야된다.
+
+//   변수로 받기위해 /다음에 {itemId}명시
+    @GetMapping("/admin/item/{itemId}")
+    public String itemDetail(@PathVariable("itemId")Long itemId , Model model){
+
+        try{
+
+            ItemFormDto itemFormDto = itemService.getItemDetail(itemId);
+            model.addAttribute("ItemFormDto",itemFormDto);
+//            return"/item/itemForm";
+        }
+        catch (EntityNotFoundException e){
+            model.addAttribute("errorMessage","존재하지 않는 상품입니다.");
+            model.addAttribute("ItemFormDto",new ItemFormDto());
+            return "/item/itemForm";
+        }
+
+        return "/item/itemForm";
+    }
+
+
+//    아이템 이미지 수정
+//    @PostMapping("/admin/item/{itemId}")
+//    public
 
 
 }
