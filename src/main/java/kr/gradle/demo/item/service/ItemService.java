@@ -5,9 +5,12 @@ import kr.gradle.demo.item.Repository.ItemImgRepository;
 import kr.gradle.demo.item.Repository.ItemRepository;
 import kr.gradle.demo.item.dto.ItemFormDto;
 import kr.gradle.demo.item.dto.ItemImgDto;
+import kr.gradle.demo.item.dto.ItemSearchDto;
 import kr.gradle.demo.item.entity.Item;
 import kr.gradle.demo.item.entity.ItemImage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -84,6 +87,30 @@ public class ItemService {
 //        itemFormDto.setItemImgIds();
 
         return itemFormDto;
+    }
+    public Long updateItem(ItemFormDto itemFormDto,List<MultipartFile> itemFileList) throws IOException {
+
+//      아이템을 가져와서 아이템 안에 변경감지 영속성 컨테스트에 띄어져 있으므로 변경감지로 업데이트 한다.,
+        Item item = itemRepository.findById(itemFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+//       jpa 변경감지로 인해 업데이트
+        item.updateItem(itemFormDto);
+
+//       뷰단에서 가져온 아이디들을 가져온다.
+        List<Long> itemImgIds = itemFormDto.getItemImgIds();
+
+//        아이템 이미지 서비스에 만들어놓은 아이템 이미지 업데이트 로직을 태워 보낸다.
+        for(int i = 0; i<itemFileList.size(); i++){
+//           서비스단에 만들어놓은 업데이트 로직에 필요한 데이터를 이미 정의 해놓았으므로
+//           첫번째 그 아이템의 고유 아이디와 멀티파트 파일 들을 보내준다
+            itemImgService.updateItemImg(itemImgIds.get(i),itemFileList.get(i));
+        }
+//      여기까지는 아이템 바꿔치기는 ok
+//        리턴값은 그 뷰단에 필요한 값을 줘야 되기때문에 여기는 뷰에서 쓸 바뀐 아이디 값을 줘야한다.
+        return  item.getId();
+    }
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+//       itemRepository에서 상속을받아서 구현이됐으므로 레포지토리에 기능을 쓴다.
+        return itemRepository.getAdminItemPage(itemSearchDto,pageable);
     }
 
 }

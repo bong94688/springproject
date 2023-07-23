@@ -2,6 +2,7 @@ package kr.gradle.demo.item.entity;
 
 import jakarta.persistence.*;
 import kr.gradle.demo.item.constant.ItemSellStatus;
+import kr.gradle.demo.item.dto.ItemFormDto;
 import kr.gradle.demo.utils.entity.BaseEntity;
 import lombok.*;
 
@@ -44,7 +45,14 @@ public class Item extends BaseEntity{
     @Column(nullable = false)
     private ItemSellStatus itemSellStatus;
 
-
+//   JPA 변경감지 기능을 이용하여 업데이트하면 자동으로 디비에 반영될수 있게 만든다.
+    public void updateItem(ItemFormDto itemFormDto){
+        this.itemNm = itemFormDto.getItemNm();
+        this.price = itemFormDto.getPrice();
+        this.stockNumber = itemFormDto.getStockNumber();
+        this.itemDetail = itemFormDto.getItemDetail();
+        this.itemSellStatus = itemFormDto.getItemSellStatus();
+    }
 
 
 //    테 해줘....

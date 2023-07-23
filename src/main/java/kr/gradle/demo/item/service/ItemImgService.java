@@ -1,5 +1,6 @@
 package kr.gradle.demo.item.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import kr.gradle.demo.item.Repository.ItemImgRepository;
 import kr.gradle.demo.item.entity.ItemImage;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,36 @@ public class ItemImgService {
 
         itemImgRepository.save(itemImage);
 
+
+    }
+
+//   이미지 업데이트하기
+    public void updateItemImg(Long ItemImgid, MultipartFile itemImgFile) throws IOException {
+        System.out.println(ItemImgid);
+//       만약 멀티파트 파일이 비어있는가?? -> 처리할 필요가 없으니까
+//       이미지가 비어있지 않을때만 동작하게한다!!!!!
+        if(!itemImgFile.isEmpty()){
+//           아이템이미지를 다 찾아와서 변경해주기위해 들고온다!
+            ItemImage itemImage = itemImgRepository.findById(ItemImgid).orElseThrow(EntityNotFoundException::new);
+//           이미지들을 들고와서
+//
+//            만약 아이템 이미지의 아이템 네임이 비어있지 않을때!
+            if(!StringUtils.isEmpty(itemImage.getImgName())){
+//              기본 "${itemImgLocation}" 경로에 + "/" + 아이템 이름) 을 지운다
+                fileService.deleteFile(itemImgLocation + "/"+itemImage.getImgName());
+            }
+
+//          oriName 받아온 실제이름을 받는다.
+            String oriName = itemImgFile.getOriginalFilename();
+//           이미지 UUID로 만들어서 리턴!
+            String imgName = fileService.uploadFile(itemImgLocation,oriName,itemImgFile.getBytes());
+//            실제 이미지 경로
+            String imgUrl = "/images/item" + imgName;
+
+//           변경감지를 이용해서 itemImage 객체에서 변경!
+//           영속성 컨테스트에 떠있는 변경 감지로 업데이트가 되도록 한다.??!!!! jpa 에서 저절로 업데이트 해준다
+            itemImage.updateItemImage(oriName,imgName,imgUrl);
+        }
 
     }
 }

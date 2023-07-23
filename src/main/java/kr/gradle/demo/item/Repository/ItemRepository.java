@@ -11,7 +11,10 @@ import java.util.List;
 
 
 @Repository
-public interface ItemRepository extends JpaRepository<Item,Long>, QuerydslPredicateExecutor<Item> {
+public interface ItemRepository extends JpaRepository<Item,Long>, QuerydslPredicateExecutor<Item>
+// 우리가 만든 구현한 인터페이스를 상속 받고 기능을 추가한다.
+    ,ItemRepositoryCustom
+{
 
 
     List<Item> findByItemNm(String ItemNm);
