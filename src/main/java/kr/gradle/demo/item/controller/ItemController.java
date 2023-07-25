@@ -149,6 +149,18 @@ public class ItemController {
         return "item/itemList";
     }
 
+    @GetMapping("item/{itemId}")
+    public String ItemDtl(Model model,@PathVariable("itemId") Long itemId)
+    {
+        ItemFormDto itemFormDto = itemService.getItemDetail(itemId);
+
+        model.addAttribute("item",itemFormDto);
+
+        return "item/itemDetail";
+    }
+
+
+
 //    아이템 이미지 수정
 //    @PostMapping("/admin/item/{itemId}")
 //    public

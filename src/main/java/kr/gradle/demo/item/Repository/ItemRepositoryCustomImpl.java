@@ -1,6 +1,7 @@
 package kr.gradle.demo.item.Repository;
 
 
+import com.querydsl.core.QueryFactory;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -10,6 +11,9 @@ import kr.gradle.demo.item.constant.ItemSellStatus;
 import kr.gradle.demo.item.dto.ItemSearchDto;
 import kr.gradle.demo.item.entity.Item;
 import kr.gradle.demo.item.entity.QItem;
+import kr.gradle.demo.item.entity.QItemImage;
+import kr.gradle.demo.main.dto.MainItemDto;
+import kr.gradle.demo.main.dto.QMainItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -84,8 +88,65 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         return new PageImpl<>(list,pageable,total);
     }
 
+    @Override
+    public Page<MainItemDto> getMainItemDtoPage(ItemSearchDto itemSearchDto, Pageable pageable) {
 
-//   ItemSellStatus -> SELL이냐 SOLD OUT 이냐 변수로 받고
+//        메인에 보여줄 아이템
+//        QItem을 새로생성하고 item은 이 클래스에 스태틱에 올라와서 연결되어있어서 사용가능하다.
+        QItem qItem = item;
+
+//       QItem이미지를 가져와서 qItem에연관관계가 되어잇기 때문에 qitemImage도 필요하다.
+        QItemImage itemImage = QItemImage.itemImage;
+
+//       jpaQueryFactory을 EntityManager을 주입 받았기때문에 jpaQueryfactory을 querydsl을 사용해서 조회하는 방법
+        List<MainItemDto> results = jpaQueryFactory.select(
+                        new QMainItemDto(
+//                       먼저 item.id을 가져와야되고
+                                item.id,
+//                        item이름
+                                item.itemNm,
+//                        아이템 디테일
+                                item.itemDetail,
+//                        이미지 Url
+                                itemImage.imgUrl,
+//                        가격정보
+                                item.price
+//                        이들이 필요해서 각 Q클래스로 생성했던 객체들을 이용해서 하나씩 가져온다.
+                        )).from(
+//                       이미지에 각 정보들이 있으므로 itemImage에서 가져오는게 적절하다.
+                        itemImage
+                ).join(itemImage.item, item)
+                .where(itemImage.repImgYn.eq("Y"))
+ //                itemNmLike의 검색조건을 가져와서 빈값이면 null 아니면 Qitem 에 삽입시켜서 리턴받는다.
+                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+//                item에 id 내림차순으로 찾아온다.
+                .orderBy(item.id.desc())
+//              어디부터 할거냐를 offect으로 잡을수 있다 받아온 페이지 정보에서 가져온 pageable 객체에서 옵셋을 꺼내서 쓰고 시작할 위치
+//               위에 앞에 로직에서 pageable 객체에 주입되어있는 Offeset정보을 가져오는것!
+                .offset(pageable.getOffset())
+//               limit -> 페이지 전체 개수를 줘서 페이지가 몇개냐를 알려주는 역할-> total 페이지 -> 먼저 선행으로 total 을 계산해서 넣어줘야지 그 페이지에 맞춰서 가져온다.
+                .limit(pageable.getPageSize())
+                .fetch();
+
+//        List<MainItemDto> contents = List -> 굳이 필요없는 로직
+//        리스트에 전체개수 -> total -> 와일드 카드를써서 전체개수를 가져온다
+        long total = jpaQueryFactory
+                .select(Wildcard.count)
+                .from(itemImage)
+                .join(itemImage.item, item)
+                .where(itemImage.repImgYn.eq("Y"))
+//                itemNmLike의 검색조건을 가져와서 빈값이면 null 아니면 Qitem 에 삽입시켜서 리턴받는다.
+                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                .fetchOne()
+                ;
+
+// 위에 만든 기능 서비스에서 쓸수있다.
+
+        return new PageImpl<>(results,pageable,total);
+    }
+
+
+    //   ItemSellStatus -> SELL이냐 SOLD OUT 이냐 변수로 받고
 //    searchSellStatus 타입으로 리턴하고 만약 searchSellStatus null 이면 null null이 아니면 item에 상태에서 비교 하고 null 이나 item.itemSellStatus.eq(searchSellStatus) 을 리턴
     private BooleanExpression searchSellStatusEq(ItemSellStatus searchSellStatus){
         return searchSellStatus == null ? null : item.itemSellStatus.eq(searchSellStatus);
@@ -129,5 +190,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         }
 
         return null;
+    }
+    private BooleanExpression itemNmLike(String searchQuery){
+        return StringUtils.isEmpty(searchQuery) ? null : QItem.item.itemNm.like("%" + searchQuery + "%");
     }
 }

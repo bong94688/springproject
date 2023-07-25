@@ -8,6 +8,7 @@ import kr.gradle.demo.item.dto.ItemImgDto;
 import kr.gradle.demo.item.dto.ItemSearchDto;
 import kr.gradle.demo.item.entity.Item;
 import kr.gradle.demo.item.entity.ItemImage;
+import kr.gradle.demo.main.dto.MainItemDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -111,6 +112,11 @@ public class ItemService {
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
 //       itemRepository에서 상속을받아서 구현이됐으므로 레포지토리에 기능을 쓴다.
         return itemRepository.getAdminItemPage(itemSearchDto,pageable);
+    }
+
+
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
+        return itemRepository.getMainItemDtoPage(itemSearchDto, pageable);
     }
 
 }
