@@ -1,6 +1,7 @@
 package kr.gradle.demo.item.entity;
 
 import jakarta.persistence.*;
+import kr.gradle.demo.exception.OutOfStockException;
 import kr.gradle.demo.item.constant.ItemSellStatus;
 import kr.gradle.demo.item.dto.ItemFormDto;
 import kr.gradle.demo.utils.entity.BaseEntity;
@@ -17,7 +18,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Item extends BaseEntity{
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 //  컬럼 이름 값
@@ -45,6 +45,14 @@ public class Item extends BaseEntity{
     @Column(nullable = false)
     private ItemSellStatus itemSellStatus;
 
+
+    public void removeStock(int strockNumber){
+        int resStock = this.stockNumber - strockNumber;
+        if(resStock<0){
+            throw new OutOfStockException("상품 재고가 부족 합니다.(현재 재고 수량: "+this.stockNumber+")");
+        }
+        this.stockNumber = resStock;
+    }
 //   JPA 변경감지 기능을 이용하여 업데이트하면 자동으로 디비에 반영될수 있게 만든다.
     public void updateItem(ItemFormDto itemFormDto){
         this.itemNm = itemFormDto.getItemNm();

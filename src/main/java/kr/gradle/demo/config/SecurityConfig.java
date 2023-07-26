@@ -29,6 +29,9 @@ public class SecurityConfig {
 
         System.out.println("1111111");
 
+//        http.csrf().disable().build();
+
+
         return http.formLogin((formLogin)->{
 //                    로그인페이지 설정
             formLogin.loginPage("/member/login");

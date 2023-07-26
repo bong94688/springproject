@@ -36,5 +36,11 @@ public class OrderItem extends BaseEntity {
 
     private int count;
 
+    public void addOrderItem(OrderItem orderItem){
+        orderItem.addOrderItem(orderItem);
+        orderItem.setOrder(this.order);
+    }
+
+    public 
 
 }
